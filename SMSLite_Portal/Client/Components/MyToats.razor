@@ -1,0 +1,21 @@
+﻿@page "/toast"
+@inject IToastService toastService
+
+
+ 
+<button class="btn btn-success" @onclick="ShowSuccess">Show Success</button>
+
+@code {
+    //protected override Task OnInitializedAsync()
+    //{
+    //     ShowSuccess();
+    //}
+    
+
+    //ToastService.ShowInfo("This is Info message");
+
+    private void ShowSuccess()
+    {
+        toastService.ShowSuccess("This is Success message with title", "SUCCESS");
+    }
+}

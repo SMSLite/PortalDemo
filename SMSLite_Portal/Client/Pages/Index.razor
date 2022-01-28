@@ -1,0 +1,91 @@
+﻿@page "/"
+
+@using SMSLite_Portal.Client.Services
+
+@layout EmptyLayout
+@inject NavigationManager _navigationManager
+
+
+@inject ILocalStorageService ILocalStorageService
+@inject ILoginService ILoginService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IToastService ts
+
+
+
+<EditForm Model="@user" OnValidSubmit="HandleRegistration">
+    <DataAnnotationsValidator />
+<div class="container-fluid">
+    <div class="row no-gutter">
+        <div class="col-md-6 d-none d-md-flex bg-image"></div>
+        <div class="col-md-6 bg-light">
+            <div class="login d-flex align-items-center py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-7 col-xl-6 mx-auto">
+                            <h3 class="display-4">LOGIN!!</h3> <br>
+
+                            <div class="form-group mb-3">
+                                <input id="inputEmail" @bind-value="user.UserName" placeholder="Email address" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4">
+                            </div>
+                            <div class="form-group mb-3"> <input id="inputPassword" @bind-value="user.Password" type="password" placeholder="Password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-danger"><br> </div>
+                            <div class="custom-control custom-checkbox mb-3"> <input id="customCheck1" type="checkbox" checked class="custom-control-input"> <label for="customCheck1" class="custom-control-label">Remember password</label> </div>
+                            <button type="submit" class="btn btn-danger btn-block text-uppercase mb-2 rounded-pill shadow-sm">
+                                @if (MyLoading)
+                                {
+                                    <span class="spinner-border spinner-border-sm mr-1"></span>
+                                }
+                                Sign in
+                            </button>
+                            <div class="text-center d-flex justify-content-between mt-4">
+                                <p> OR &nbsp<a href=" " class="font-italic text-muted"> <u>Create Account</u></a></p>
+                            </div>
+                            @if (!String.IsNullOrEmpty(Message))
+                            {
+                                <div class="alert alert-danger">@Message</div>
+                               
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</EditForm>
+
+@code {
+
+    public bool MyLoading { get; set; }= false;
+    public string Message { get; set; } = null;
+
+    private LoginViewModel user = new LoginViewModel();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await ILocalStorageService.RemoveItemAsync("authToken");
+    }
+
+
+    public async Task HandleRegistration()
+    {
+        MyLoading = true;
+        var result = await ILoginService.Login(user);
+        if (result.Success)
+        {
+            Message = null;
+           
+                await ILocalStorageService.SetItemAsync<string>("authToken", result.Data);
+                await AuthStateProvider.GetAuthenticationStateAsync();
+                _navigationManager.NavigateTo("/dashboard");
+        }
+        else
+        {
+            Message= result.Message;
+           
+        }
+        MyLoading = false;
+         
+
+    }
+}

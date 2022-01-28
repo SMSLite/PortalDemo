@@ -1,0 +1,109 @@
+﻿@page "/dashboard"
+@using System.Security.Claims
+@using SMSLite_Portal.Client.Services
+
+@inject ILoginService ILoginService
+@inject NavigationManager Navi
+@inject ILocalStorageService _localStorageService
+
+<h3>Welcome..</h3>
+
+
+
+<EditForm Model="user" OnValidSubmit="UpdateProfile">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-8">
+            <img src="@user.pic" alt="User Profile Picture" class="img-thumbnail"> <br /> <br />
+            <InputFile style="margin-bottom: 1rem;" class="white-text"></InputFile>
+        </div>
+        <div class="col-lg-8 col-md-6 col-sm-12">
+            <input type="text" @bind-value="user.nme" class="form-control dark-theme-textbox" placeholder="Faculty Name">
+            <br />
+            <input type="text" @bind-value="user.designation" class="form-control dark-theme-textbox" placeholder="Designation">
+            <br />
+            <input type="text" @bind-value="user.qualification" class="form-control dark-theme-textbox" placeholder="Qualification">
+            <br />
+            <input type="text" @bind-value="user.DOJ" class="form-control dark-theme-textbox" placeholder="Date of Joining">
+            <br />
+            @* <button class="btn btn-primary" disabled="@(!IsUserAuthorized)" @onclick="UpdateProfile">Save</button>
+                <button class="btn btn-primary" disabled="@(!IsUserAuthorized)" @onclick="DownloadProfilePicture">Download Picture</button>*@
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+    Mdl_Faculty user = new Mdl_Faculty();
+    private string FromUserId { get; set; }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
+         //  Mdl_Faculty fac = await ILoginService.GetProfile();
+
+
+
+
+        //var claimsPrincipal = (await AuthenticationStateTask).User;
+
+        //if (claimsPrincipal.Identity is not { IsAuthenticated: true })
+        //    Navi.NavigateTo("/");
+
+        //var jwtToken = await _localStorageService.GetItemAsStringAsync("authToken");
+        //if (jwtToken == null) return;
+
+
+        //FromUserId = claimsPrincipal.Identity.NameIdentifier;
+
+
+        //// FromUserId = (await ILoginService.GetUserByJWTAsync(jwtToken)).UserId.ToString();
+
+        //int x=10;
+
+
+
+        //var authState = await AuthenticationState;
+        //var user = authState.User;
+        //int UserID;
+        //if (user.Identity is { IsAuthenticated: true })
+        //{
+        //    var claim = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
+        //    UserID = Convert.ToInt32(claim?.Value);
+        //    try
+        //    {
+        //        Mdl_Faculty fac = await ILoginService.GetProfile(UserID);
+
+        //        //if(_profileViewModel.ProfilePicDataUrl == null)
+        //        //{
+        //        //    _profileViewModel.ProfilePicDataUrl = "/img/profile_pic.jpg";
+        //        //    Console.WriteLine(_profileViewModel.ProfilePicDataUrl);
+        //        //}
+        //        //IsLoading = false;
+        //    }
+        //    catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        //    {
+        //        //_navigationManager.NavigateTo("/", true);
+        //    }
+        //}
+
+
+
+
+    }
+
+
+
+
+    private async Task UpdateProfile()
+    {
+
+    }
+
+
+}
